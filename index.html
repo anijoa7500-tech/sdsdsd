@@ -76,15 +76,15 @@
         </div>
         
         <div class="max-w-7xl mx-auto px-4 flex items-center gap-8 text-sm text-[#9aa0a6]">
-                        <a href="#" id="tab-all" onclick="changeTab('all')" class="tab-item flex items-center gap-1 py-2 border-b-2 border-google-blue text-google-blue font-semibold">
+            <a href="#" id="tab-all" onclick="changeTab('all')" class="tab-item flex items-center gap-1 py-2 border-b-2 border-google-blue text-google-blue font-semibold">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15 4V1H9v3H0v3h24V4h-9zM2 9v2h20V9H2zm0 6h20v-2H2v2zm0 4h20v-2H2v2z"/></svg>
                 <span>전체</span>
             </a>
-                        <a href="#" id="tab-image" onclick="changeTab('image')" class="tab-item flex items-center gap-1 py-2 hover:text-white">
+            <a href="#" id="tab-image" onclick="changeTab('image')" class="tab-item flex items-center gap-1 py-2 hover:text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21.96 11.08l-2.09-2.09c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-.92.92-1.42-1.42-.92-.92c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-1.42 1.42-1.42-1.42c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-1.42 1.42L3.13 8.99c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-2.09 2.09c.19.19.29.45.29.71 0 .26.1.52.29.71l1.42 1.42-1.42 1.42c-.19.19-.29.45-.29.71 0 .26.1.52.29.71l2.09 2.09c.19.19.45.29.71.29.26 0 .52-.1.71-.29l1.42-1.42 1.42 1.42c-.19.19.45.29.71.29.26 0 .52-.1.71-.29l1.42-1.42 1.42 1.42c-.19.19.45.29.71.29.26 0 .52-.1.71-.29l2.09-2.09c.19-.19.29-.45.29-.71 0-.26-.1-.52-.29-.71l-1.42-1.42 1.42-1.42c.19-.19.29-.45.29-.71 0-.26-.1-.52-.29-.71z"/></svg>
                 <span>이미지</span>
             </a>
-                        <a href="#" id="tab-video" onclick="changeTab('video')" class="tab-item flex items-center gap-1 py-2 hover:text-white">
+            <a href="#" id="tab-video" onclick="changeTab('video')" class="tab-item flex items-center gap-1 py-2 hover:text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
                 <span>동영상</span>
             </a>
@@ -131,9 +131,21 @@
                         <div class="rounded-2xl border border-white/10 bg-search-bar p-4">
                             <div class="text-sm text-[#9aa0a6] mb-2">날씨</div>
                             <div class="flex items-center justify-between">
-                                <div class="text-center"><div class="text-xs text-[#9aa0a6]">화</div><div class="text-base"> 17°</div></div>
-                                <div class="text-center"><div class="text-xs text-[#9aa0a6]">수</div><div class="text-base"> 19°</div></div>
-                                <div class="text-center"><div class="text-xs text-[#9aa0a6]">목</div><div class="text-base"> 19°</div></div>
+                                <div class="flex flex-col items-center">
+                                    <div class="text-4xl">☀️</div>
+                                    <div class="text-xs text-[#9aa0a6]">화</div>
+                                    <div class="text-base"> 17°</div>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <div class="text-4xl">🌤️</div>
+                                    <div class="text-xs text-[#9aa0a6]">수</div>
+                                    <div class="text-base"> 19°</div>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <div class="text-4xl">☁️</div>
+                                    <div class="text-xs text-[#9aa0a6]">목</div>
+                                    <div class="text-base"> 19°</div>
+                                </div>
                             </div>
                             <a class="mt-2 inline-block text-xs text-google-blue hover:underline" href="#">웨더뉴스</a>
                         </div>
@@ -222,7 +234,7 @@
         { title: "로컬 베이커리 위크 in 하단 · 참가 매장 안내", url: "https://bakeryweek.kr/hadan", displayUrl: "bakeryweek.kr", snippet: "하단의 개성 있는 로컬 베이커리 20여 곳이 참여합니다. 시그니처 메뉴, 빵 굽는 시간, 스탬프 위치와 한정 굿즈 정보를 제공합니다.", rating: 4.6, reviews: 745 },
     ];
     
-    // 이미지 검색 결과 데이터 (비워짐) 👈 수정된 부분
+    // 이미지 검색 결과 데이터 (비워짐) 👈 이미지 탭 결과를 없애는 조치
     const imageResults = []; 
     
     // 동영상 검색 결과 데이터
@@ -399,4 +411,163 @@
 
         // 1. 탭 활성화/비활성화 UI 업데이트
         document.querySelectorAll('.tab-item').forEach(tab => {
-            tab.classList.remove('border-b-2', 'border-google-blue', 'text-google-blue
+            tab.classList.remove('border-b-2', 'border-google-blue', 'text-google-blue', 'font-semibold');
+            tab.classList.add('hover:text-white');
+        });
+
+        const activeTab = document.getElementById(`tab-${tabName}`);
+        if (activeTab) {
+            activeTab.classList.add('border-b-2', 'border-google-blue', 'text-google-blue', 'font-semibold');
+            activeTab.classList.remove('hover:text-white');
+        }
+
+        // 2. 결과 내용 전환
+        const summarySection = document.getElementById('summary-section');
+        const resultsSection = document.getElementById('results-section');
+        const asidePanel = document.getElementById('knowledge-panel-aside'); // 사이드바 엘리먼트 가져오기
+        
+        summarySection.style.display = 'none'; // 기본적으로 상단 요약 섹션 숨김
+
+        // 사이드바 (Knowledge Panel) 표시/숨김 로직: 'image'와 'video' 탭에서만 숨김
+        if (asidePanel) {
+            if (tabName === 'all' || tabName === 'map') {
+                asidePanel.style.display = ''; // CSS 기본값 (lg:block)으로 복원하여 표시
+            } else {
+                asidePanel.style.display = 'none'; // 숨김
+            }
+        }
+
+        if (tabName === 'all') {
+            // '전체' 탭: 상단 요약/지도 표시, 일반 검색 결과 표시
+            summarySection.style.display = 'block';
+            resultsSection.classList.add('lg:col-span-1');
+            resultsSection.classList.remove('col-span-full');
+            renderResults(seedResults);
+
+        } else if (tabName === 'image') {
+            // '이미지' 탭: 상단 요약/지도 숨김, 이미지 갤러리 표시 (사이드바 숨김)
+            resultsSection.classList.remove('lg:col-span-1');
+            resultsSection.classList.add('col-span-full');
+            renderImageGallery(imageResults); // imageResults는 비어 있음
+
+        } else if (tabName === 'video') {
+            // '동영상' 탭: 상단 요약/지도 숨김, 동영상 결과 표시 (사이드바 숨김)
+            resultsSection.classList.remove('lg:col-span-1');
+            resultsSection.classList.add('col-span-full');
+            renderVideoResults(videoResults);
+
+        } else if (tabName === 'map') {
+            // '지도' 탭: 상단 요약/지도 표시, 검색 결과 영역에 안내 메시지 표시 (사이드바 표시)
+            summarySection.style.display = 'block';
+            renderMapTab();
+        }
+
+        currentTab = tabName;
+        // 탭이 변경되면 지도 크기를 재조정하여 레이아웃 문제 방지 (지도가 보일 때만)
+        if (tabName === 'all' || tabName === 'map') {
+            forceMapInvalidate();
+        }
+    }
+
+
+    // ===============================
+    // 4. 지도 초기화 및 유틸리티 (Map and Utilities)
+    // ===============================
+
+    let mapInstance = null;
+    let mapInitialized = false;
+    let mapContainerObserver = null;
+
+    function forceMapInvalidate() {
+        if (mapInstance && mapInitialized) {
+            // 지도 크기 변경 감지 후 지도를 다시 그리도록 강제
+            mapInstance.invalidateSize(true); 
+        }
+    }
+
+    function initializeMap() {
+        const L = window.L;
+        const el = document.getElementById("mapPreview");
+        
+        if (!L || !el || mapInitialized) {
+            return;
+        }
+
+        try {
+            mapInitialized = true;
+            
+            if (mapInstance) { 
+                mapInstance.remove(); 
+                mapInstance = null;
+            }
+
+            // 1. 지도 초기화 (부산 하단역 근처 좌표)
+            mapInstance = L.map(el, { 
+                zoomControl: false, 
+                scrollWheelZoom: false 
+            }).setView([35.104, 128.966], 15);
+
+            // 2. 타일셋 적용 (Esri WorldImagery)
+            L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+                attribution: '', 
+                maxZoom: 19,
+                detectRetina: true
+            }).addTo(mapInstance);
+            
+            // 3. 마커 추가
+            L.marker([35.104, 128.966])
+                .addTo(mapInstance)
+                .bindPopup("<b>글로컬크리에이터 하단팀 거점</b><br>하단역 5번 출구 부근")
+                .openPopup();
+            
+            // 4. 레이아웃 변경 감지 시 지도 크기 재조정
+            mapInstance.whenReady(function() {
+                this.invalidateSize(true); 
+                setTimeout(forceMapInvalidate, 500); 
+                setTimeout(forceMapInvalidate, 1000); 
+            });
+
+            mapContainerObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' || mutation.type === 'childlist') {
+                        forceMapInvalidate();
+                    }
+                });
+            });
+
+            const parentElement = el.parentElement;
+            if (parentElement) {
+                mapContainerObserver.observe(parentElement, { 
+                    attributes: true, 
+                    childList: true, 
+                    subtree: true 
+                });
+            }
+            
+            window.addEventListener('resize', forceMapInvalidate);
+
+        } catch (err) {
+            console.error("Leaflet map initialization failed:", err);
+            mapInitialized = false;
+        }
+    }
+
+    // 초기화 함수 실행 시점
+    document.addEventListener('DOMContentLoaded', () => {
+        // 페이지 로드 시 'all' 탭으로 시작
+        renderResults(seedResults);
+        initializeMap();
+    });
+    
+    window.addEventListener('load', initializeMap);
+    
+    window.addEventListener('beforeunload', () => {
+        if (mapContainerObserver) {
+            mapContainerObserver.disconnect();
+        }
+    });
+
+</script>
+
+</body>
+</html>
