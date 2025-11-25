@@ -37,7 +37,7 @@
             background-color: #e6e6e6; 
         }
         
-        /* ⭐️ 저작권 문구 숨기기 (CSS 강제 적용) ⭐️ */
+        /* ⚠️ 저작권 문구 숨기기 (CSS 강제 적용) ⚠️ */
         .leaflet-control-attribution {
             display: none !important;
         }
@@ -53,7 +53,7 @@
             
             <div class="flex-1">
                 <div class="flex items-center gap-2 bg-search-bar rounded-full pl-4 pr-2 py-2 border border-transparent shadow">
-                    <span class="text-[#bdc1c6] text-sm">🔎</span>
+                    <span class="text-[#bdc1c6] text-sm"></span>
                     <input
                         id="searchInput"
                         value="부산외국어대학교 글로컬크리에이터 하단"
@@ -131,9 +131,9 @@
                         <div class="rounded-2xl border border-white/10 bg-search-bar p-4">
                             <div class="text-sm text-[#9aa0a6] mb-2">날씨</div>
                             <div class="flex items-center justify-between">
-                                <div class="text-center"><div class="text-xs text-[#9aa0a6]">화</div><div class="text-base">☀️ 17°</div></div>
-                                <div class="text-center"><div class="text-xs text-[#9aa0a6]">수</div><div class="text-base">☀️ 19°</div></div>
-                                <div class="text-center"><div class="text-xs text-[#9aa0a6]">목</div><div class="text-base">☀️ 19°</div></div>
+                                <div class="text-center"><div class="text-xs text-[#9aa0a6]">화</div><div class="text-base"> 17°</div></div>
+                                <div class="text-center"><div class="text-xs text-[#9aa0a6]">수</div><div class="text-base"> 19°</div></div>
+                                <div class="text-center"><div class="text-xs text-[#9aa0a6]">목</div><div class="text-base"> 19°</div></div>
                             </div>
                             <a class="mt-2 inline-block text-xs text-google-blue hover:underline" href="#">웨더뉴스</a>
                         </div>
@@ -152,7 +152,7 @@
                 <div class="rounded-2xl border border-white/10 bg-search-bar p-4 text-[#bdc1c6] leading-relaxed">
                     <div class="text-[#e8eaed] font-semibold mb-2">기본현황</div>
                     부산 하단동이 단순히 경유지가 아닌, 외국인 관광객이 '머물고, 소비하고 싶은' 목적지가 되기 위한 글로컬 크리에이터의 핵심 전략은 하단이 가진 독특한 자원을 '환승 시간'에 맞춘 매력적인 체험으로 바꾸는 것입니다.
-            </div>
+                </div>
                 <div class="rounded-2xl border border-white/10 bg-search-bar p-4 text-sm text-[#e8eaed]">
                     <div class="text-[#e8eaed] font-semibold mb-2">하단 지역 핵심지표</div>
                     <dl class="grid grid-cols-[120px_minmax(0,1fr)] gap-y-2">
@@ -168,8 +168,8 @@
             <ul id="resultsList" class="space-y-6">
                 </ul>
         </section>
-       
-                <aside class="hidden lg:block lg:sticky lg:top-[76px] h-fit">
+        
+                <aside id="knowledge-panel-aside" class="hidden lg:block lg:sticky lg:top-[76px] h-fit">
             <div class="rounded-2xl border border-white/10 bg-search-bar overflow-hidden shadow">
                 <a href="#" target="_blank" rel="noreferrer" class="block">
                     <img 
@@ -211,7 +211,7 @@
     // ===============================
     // 1. 데이터 정의 (Data Definitions)
     // ===============================
-   
+    
     // 일반 검색 결과 데이터
     const seedResults = [
         { title: "하단 숙박/체험 로컬 여행 상품 리스트 · 하단.음숙.다.대.허브", url: "/busan-paris-festival/tour-list.html", displayUrl: "hadan.umsuk.daedae.heobeo", snippet: "부산 사하구 하단 문화의거리 기반의 로컬 여행 상품 추천 목록입니다. K-인싸 투어, 1일 비누 만들기, 로컬 맛집 등 다양한 테마별 액티비티와 숙박 정보를 제공합니다.", rating: 4.6, reviews: 524 },
@@ -221,7 +221,7 @@
         { title: "다대포 선셋 포토워크 · 참가자 모집(하단 출발)", url: "https://www.dadaepo-sunset.com/walk", displayUrl: "dadaepo-sunset.com", snippet: "하단에서 출발해 다대포 해변 일몰 명소를 걷는 포토워크입니다. 촬영 포인트, 복장 가이드, 날씨 체크리스트를 참고해보세요.", rating: 4.5, reviews: 392 },
         { title: "로컬 베이커리 위크 in 하단 · 참가 매장 안내", url: "https://bakeryweek.kr/hadan", displayUrl: "bakeryweek.kr", snippet: "하단의 개성 있는 로컬 베이커리 20여 곳이 참여합니다. 시그니처 메뉴, 빵 굽는 시간, 스탬프 위치와 한정 굿즈 정보를 제공합니다.", rating: 4.6, reviews: 745 },
     ];
-   
+    
     // 이미지 검색 결과 데이터
     const imageResults = [
         { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/image-1.jpg", caption: "하단 문화의 거리 야경", source: "부산관광공사" },
@@ -233,7 +233,7 @@
         { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/image-7.jpg", caption: "프렌치 마르쉐 축제 포스터", source: "busan-parisfest.kr" },
         { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/image-8.jpg", caption: "부산 서부 버스터미널 모습", source: "교통정보센터" },
     ];
-   
+    
     // 동영상 검색 결과 데이터
     const videoResults = [
         {
@@ -274,17 +274,17 @@
     // ===============================
     // 2. 렌더링 함수 (Rendering Functions)
     // ===============================
-   
+    
     // 일반 검색 결과를 렌더링하는 함수 (전체 탭)
     function renderResults(results) {
         const list = document.getElementById('resultsList');
         const countElement = document.getElementById('result-count');
         if (!list || !countElement) return;
-       
+        
         // 결과 목록 레이아웃 설정
         list.className = 'space-y-6';
         countElement.textContent = `약 ${results.length}개 결과`;
-       
+        
         list.innerHTML = results.map(r => `
             <li class="group border-b border-white/10 pb-4">
                 <div class="text-xs text-[#9aa0a6] mb-1">${r.displayUrl}</div>
@@ -304,11 +304,11 @@
     function renderImageGallery(images) {
         const list = document.getElementById('resultsList');
         const countElement = document.getElementById('result-count');
-       
+        
         // 결과 목록 레이아웃을 Grid로 변경 (모바일 2열, PC 4열)
         list.className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4';
         countElement.textContent = `이미지 약 ${images.length}개`;
-       
+        
         list.innerHTML = images.map(img => `
             <li class="rounded-lg overflow-hidden border border-white/10 bg-search-bar hover:ring-2 ring-google-blue transition duration-150 cursor-pointer">
                 <a href="${img.url}" target="_blank" rel="noreferrer" class="block">
@@ -333,11 +333,11 @@
     function renderVideoResults(results) {
         const list = document.getElementById('resultsList');
         const countElement = document.getElementById('result-count');
-       
+        
         // 결과 목록 레이아웃은 일반 목록과 유사하게 유지
         list.className = 'space-y-6';
         countElement.textContent = `약 ${results.length}개의 동영상 결과`;
-       
+        
         list.innerHTML = results.map(r => `
             <li class="group border-b border-white/10 pb-4">
                 <div class="text-xs text-[#9aa0a6] mb-1">${r.displayUrl}</div>
@@ -412,8 +412,18 @@
         // 2. 결과 내용 전환
         const summarySection = document.getElementById('summary-section');
         const resultsSection = document.getElementById('results-section');
-       
+        const asidePanel = document.getElementById('knowledge-panel-aside'); // 👈 사이드바 엘리먼트 가져오기
+        
         summarySection.style.display = 'none'; // 기본적으로 상단 요약 섹션 숨김
+
+        // 👈 사이드바 (Knowledge Panel) 표시/숨김 로직 추가
+        if (asidePanel) {
+            if (tabName === 'all' || tabName === 'map') {
+                asidePanel.style.display = ''; // CSS 기본값으로 복원 (lg:block)하여 표시
+            } else {
+                asidePanel.style.display = 'none'; // 숨김
+            }
+        }
 
         if (tabName === 'all') {
             // '전체' 탭: 상단 요약/지도 표시, 일반 검색 결과 표시
@@ -423,19 +433,20 @@
             renderResults(seedResults);
 
         } else if (tabName === 'image') {
-            // '이미지' 탭: 상단 요약/지도 숨김, 이미지 갤러리 표시
+            // '이미지' 탭: 상단 요약/지도 숨김, 이미지 갤러리 표시 (사이드바 숨김)
             resultsSection.classList.remove('lg:col-span-1');
             resultsSection.classList.add('col-span-full');
             renderImageGallery(imageResults);
 
         } else if (tabName === 'video') {
-            // '동영상' 탭: 상단 요약/지도 숨김, 동영상 결과 표시
+            // '동영상' 탭: 상단 요약/지도 숨김, 동영상 결과 표시 (사이드바 숨김)
             resultsSection.classList.remove('lg:col-span-1');
             resultsSection.classList.add('col-span-full');
             renderVideoResults(videoResults);
 
         } else if (tabName === 'map') {
-            // '지도' 탭: 상단 요약/지도 표시, 검색 결과 영역에 안내 메시지 표시
+            // '지도' 탭: 상단 요약/지도 표시, 검색 결과 영역에 안내 메시지 표시 (사이드바 표시)
+            summarySection.style.display = 'block';
             renderMapTab();
         }
 
