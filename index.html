@@ -1,580 +1,682 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>부산외국어대학교 글로컬크리에이터 하단 | Google Search Clone</title>
-    
-        <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부산외국어대학교 글로컬크리에이터 하단 | Google Search Clone</title>
+    
+        <script src="https://cdn.tailwindcss.com"></script>
 
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <style>
-        /* 기본 스타일 및 초기화 */
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #202124;
-            color: #e8eaed;
-            /* 스크롤바 숨김 */
-            -ms-overflow-style: none; scrollbar-width: none;
-        }
-        body::-webkit-scrollbar { display: none; }
-        
-        /* 커스텀 색상 */
-        .text-google-blue { color: #8ab4f8; }
-        .text-google-yellow { color: #fbbc04; }
-        .bg-search-bar { background-color: #303134; }
-        
-        /* Map container should have specific dimensions */
-        #mapPreview {
-            width: 100%;
-            height: 100%;
-        }
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* 기본 스타일 및 초기화 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #202124;
+            color: #e8eaed;
+            /* 스크롤바 숨김 */
+            -ms-overflow-style: none; scrollbar-width: none;
+        }
+        body::-webkit-scrollbar { display: none; }
+        
+        /* 커스텀 색상 */
+        .text-google-blue { color: #8ab4f8; }
+        .text-google-yellow { color: #fbbc04; }
+        .bg-search-bar { background-color: #303134; }
+        
+        /* Map container should have specific dimensions */
+        #mapPreview {
+            width: 100%;
+            height: 100%;
+        }
 
-        /* Leaflet Map 컨테이너 배경색 설정 */
-        #mapPreview .leaflet-container {
-            background-color: #e6e6e6; 
-        }
-        
-        /* ⚠️ 저작권 문구 숨기기 (CSS 강제 적용) ⚠️ */
-        .leaflet-control-attribution {
-            display: none !important;
-        }
-    </style>
+        /* Leaflet Map 컨테이너 배경색 설정 */
+        #mapPreview .leaflet-container {
+            background-color: #e6e6e6; 
+        }
+        
+        /* ⚠️ 저작권 문구 숨기기 (CSS 강제 적용) ⚠️ */
+        .leaflet-control-attribution {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
 
 <div id="app" class="min-h-screen">
 
-    <header class="w-full border-b border-white/10 sticky top-0 z-40 bg-[#202124]/80 backdrop-blur">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-            <div class="text-2xl font-bold tracking-tight">Goo<span class="text-google-blue">gle</span></div>
-            
-            <div class="flex-1">
-                <div class="flex items-center gap-2 bg-search-bar rounded-full pl-4 pr-2 py-2 border border-transparent shadow">
-                    <span class="text-[#bdc1c6] text-sm"></span>
-                    <input
-                        id="searchInput"
-                        value="부산외국어대학교 글로컬크리에이터 하단"
-                        placeholder="검색 또는 URL 입력"
-                        class="flex-1 bg-transparent outline-none placeholder:text-[#9aa0a6] text-sm text-[#e8eaed]"
-                        data-testid="search-input"
-                        readonly
-                    />
-                    <button
-                        id="searchSubmit"
-                        type="button"
-                        class="px-4 py-1.5 bg-[#8ab4f8] text-[#202124] rounded-full text-sm font-semibold hover:brightness-95"
-                        data-testid="search-submit"
-                    >
-                        Google 검색
-                    </button>
-                </div>
-            </div>
-            <button class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-medium">B</button>
-        </div>
-        
-        <div class="max-w-7xl mx-auto px-4 flex items-center gap-8 text-sm text-[#9aa0a6]">
-            <a href="#" id="tab-all" onclick="changeTab('all')" class="tab-item flex items-center gap-1 py-2 border-b-2 border-google-blue text-google-blue font-semibold">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15 4V1H9v3H0v3h24V4h-9zM2 9v2h20V9H2zm0 6h20v-2H2v2zm0 4h20v-2H2v2z"/></svg>
-                <span>전체</span>
-            </a>
-            <a href="#" id="tab-image" onclick="changeTab('image')" class="tab-item flex items-center gap-1 py-2 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21.96 11.08l-2.09-2.09c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-.92.92-1.42-1.42-.92-.92c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-1.42 1.42-1.42-1.42c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-1.42 1.42L3.13 8.99c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-2.09 2.09c.19.19.29.45.29.71 0 .26.1.52.29.71l1.42 1.42-1.42 1.42c-.19.19-.29.45-.29.71 0 .26.1.52.29.71l2.09 2.09c.19.19.45.29.71.29.26 0 .52-.1.71-.29l1.42-1.42 1.42 1.42c-.19.19.45.29.71.29.26 0 .52-.1.71-.29l1.42-1.42 1.42 1.42c-.19.19.45.29.71.29.26 0 .52-.1.71-.29l2.09-2.09c.19-.19.29-.45.29-.71 0-.26-.1-.52-.29-.71l-1.42-1.42 1.42-1.42c.19-.19.29-.45.29-.71 0-.26-.1-.52-.29-.71z"/></svg>
-                <span>이미지</span>
-            </a>
-            <a href="#" id="tab-video" onclick="changeTab('video')" class="tab-item flex items-center gap-1 py-2 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-                <span>동영상</span>
-            </a>
-            <a href="#" id="tab-map" onclick="changeTab('map')" class="tab-item flex items-center gap-1 py-2 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.88 16.19 7 11.88 7 9z"/></svg>
-                <span>지도</span>
-            </a>
-            <a href="#" class="flex items-center gap-1 py-2 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                <span>더보기</span>
-            </a>
-        </div>
-    </header>
+    <header class="w-full border-b border-white/10 sticky top-0 z-40 bg-[#202124]/80 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
+            <div class="text-2xl font-bold tracking-tight">Goo<span class="text-google-blue">gle</span></div>
+            
+            <div class="flex-1">
+                <div class="flex items-center gap-2 bg-search-bar rounded-full pl-4 pr-2 py-2 border border-transparent shadow">
+                    <span class="text-[#bdc1c6] text-sm"></span>
+                    <input
+                        id="searchInput"
+                        value="부산외국어대학교 글로컬크리에이터 하단"
+                        placeholder="검색 또는 URL 입력"
+                        class="flex-1 bg-transparent outline-none placeholder:text-[#9aa0a6] text-sm text-[#e8eaed]"
+                        data-testid="search-input"
+                        readonly
+                    />
+                    <button
+                        id="searchSubmit"
+                        type="button"
+                        class="px-4 py-1.5 bg-[#8ab4f8] text-[#202124] rounded-full text-sm font-semibold hover:brightness-95"
+                        data-testid="search-submit"
+                    >
+                        Google 검색
+                    </button>
+                </div>
+            </div>
+            <button class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-medium">B</button>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 flex items-center gap-8 text-sm text-[#9aa0a6]">
+            <a href="#" id="tab-all" onclick="changeTab('all')" class="tab-item flex items-center gap-1 py-2 border-b-2 border-google-blue text-google-blue font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15 4V1H9v3H0v3h24V4h-9zM2 9v2h20V9H2zm0 6h20v-2H2v2zm0 4h20v-2H2v2z"/></svg>
+                <span>전체</span>
+            </a>
+            <a href="#" id="tab-image" onclick="changeTab('image')" class="tab-item flex items-center gap-1 py-2 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21.96 11.08l-2.09-2.09c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-.92.92-1.42-1.42-.92-.92c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-1.42 1.42-1.42-1.42c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-1.42 1.42L3.13 8.99c-.19-.19-.45-.29-.71-.29-.26 0-.52.1-.71.29l-2.09 2.09c.19.19.29.45.29.71 0 .26.1.52.29.71l1.42 1.42-1.42 1.42c-.19.19-.29.45-.29.71 0 .26.1.52.29.71l2.09 2.09c.19.19.45.29.71.29.26 0 .52-.1.71-.29l1.42-1.42 1.42 1.42c-.19.19.45.29.71.29.26 0 .52-.1.71-.29l1.42-1.42 1.42 1.42c-.19.19.45.29.71.29.26 0 .52-.1.71-.29l2.09-2.09c.19-.19.29-.45.29-.71 0-.26-.1-.52-.29-.71l-1.42-1.42 1.42-1.42c.19-.19.29-.45.29-.71 0-.26-.1-.52-.29-.71z"/></svg>
+                <span>이미지</span>
+            </a>
+            <a href="#" id="tab-video" onclick="changeTab('video')" class="tab-item flex items-center gap-1 py-2 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                <span>동영상</span>
+            </a>
+            <a href="#" id="tab-map" onclick="changeTab('map')" class="tab-item flex items-center gap-1 py-2 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zM7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 2.88-2.88 7.19-5 9.88C9.88 16.19 7 11.88 7 9z"/></svg>
+                <span>지도</span>
+            </a>
+            <a href="#" class="flex items-center gap-1 py-2 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                <span>더보기</span>
+            </a>
+        </div>
+    </header>
 
-        <main class="max-w-7xl mx-auto px-4 pt-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-8">
-        
-        <section id="summary-section" class="col-span-full">
-            <div class="mb-3">
-                <h1 class="text-2xl md:text-[28px] font-semibold tracking-tight text-[#e8eaed]">글로컬크리에어터 중단팀</h1>
-                <div class="text-sm text-[#9aa0a6] mt-1">부산광역시 금정구 금샘로 485번길 65</div>
-            </div>
+        <main class="max-w-7xl mx-auto px-4 pt-6 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-8">
+        
+        <section id="summary-section" class="col-span-full">
+            <div class="mb-3">
+                <h1 class="text-2xl md:text-[28px] font-semibold tracking-tight text-[#e8eaed]">글로컬크리에어터 중단팀</h1>
+                <div class="text-sm text-[#9aa0a6] mt-1">부산광역시 금정구 금샘로 485번길 65</div>
+            </div>
 
-            <div class="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-4">
-                
-                <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-search-bar">
-                    <img 
-                        referrerPolicy="no-referrer"
-                        src="https://anijoa7500-tech.github.io/busan-paris-festival/images/Gemini_Generated_Image_px7fb9px7fb9px7f.png" 
-                        alt="글로컬 크리에이터 팀 사진" 
-                        class="w-full h-[260px] md:h-[360px] object-cover" 
-                    />
-                    <div class="absolute bottom-3 right-3 flex gap-2">
-                        <button class="w-8 h-8 grid place-items-center rounded-full bg-black/60 text-white text-sm">‹</button>
-                        <button class="w-8 h-8 grid place-items-center rounded-full bg-black/60 text-white text-sm">›</button>
-                    </div>
-                </div>
+            <div class="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-4">
+                
+                <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-search-bar">
+                    <img 
+                        referrerPolicy="no-referrer"
+                        src="https://anijoa7500-tech.github.io/busan-paris-festival/images/Gemini_Generated_Image_px7fb9px7fb9px7f.png" 
+                        alt="글로컬 크리에이터 팀 사진" 
+                        class="w-full h-[260px] md:h-[360px] object-cover" 
+                    />
+                    <div class="absolute bottom-3 right-3 flex gap-2">
+                        <button class="w-8 h-8 grid place-items-center rounded-full bg-black/60 text-white text-sm">‹</button>
+                        <button class="w-8 h-8 grid place-items-center rounded-full bg-black/60 text-white text-sm">›</button>
+                    </div>
+                </div>
 
-                <div class="grid gap-4">
-                    <div class="rounded-2xl border border-white/10 bg-[#1f2023] relative overflow-hidden" style="height: 180px;">
-                        <div id="mapPreview" class="absolute inset-0"></div>
-                    </div>
+                <div class="grid gap-4">
+                    <div class="rounded-2xl border border-white/10 bg-[#1f2023] relative overflow-hidden" style="height: 180px;">
+                        <div id="mapPreview" class="absolute inset-0"></div>
+                    </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="rounded-2xl border border-white/10 bg-search-bar p-4">
-                            <div class="text-sm text-[#9aa0a6] mb-2">날씨</div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex flex-col items-center">
-                                    <div class="text-4xl">☀️</div>
-                                    <div class="text-xs text-[#9aa0a6]">화</div>
-                                    <div class="text-base"> 17°</div>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <div class="text-4xl">🌤️</div>
-                                    <div class="text-xs text-[#9aa0a6]">수</div>
-                                    <div class="text-base"> 19°</div>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <div class="text-4xl">☁️</div>
-                                    <div class="text-xs text-[#9aa0a6]">목</div>
-                                    <div class="text-base"> 19°</div>
-                                </div>
-                            </div>
-                            <a class="mt-2 inline-block text-xs text-google-blue hover:underline" href="#">웨더뉴스</a>
-                        </div>
-                        <div class="rounded-2xl border border-white/10 bg-search-bar overflow-hidden">
-                            <img
-                                src="https://anijoa7500-tech.github.io/busan-paris-festival/images/20150216000102_0.jpg"
-                                alt="부산광역시 전경"
-                                class="w-full h-full object-cover"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="rounded-2xl border border-white/10 bg-search-bar p-4">
+                            <div class="text-sm text-[#9aa0a6] mb-2">날씨</div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex flex-col items-center">
+                                    <div class="text-4xl">☀️</div>
+                                    <div class="text-xs text-[#9aa0a6]">화</div>
+                                    <div class="text-base"> 17°</div>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <div class="text-4xl">🌤️</div>
+                                    <div class="text-xs text-[#9aa0a6]">수</div>
+                                    <div class="text-base"> 19°</div>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <div class="text-4xl">☁️</div>
+                                    <div class="text-xs text-[#9aa0a6]">목</div>
+                                    <div class="text-base"> 19°</div>
+                                </div>
+                            </div>
+                            <a class="mt-2 inline-block text-xs text-google-blue hover:underline" href="#">웨더뉴스</a>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-search-bar overflow-hidden">
+                            <img
+                                src="https://anijoa7500-tech.github.io/busan-paris-festival/images/20150216000102_0.jpg"
+                                alt="부산광역시 전경"
+                                class="w-full h-full object-cover"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <div class="grid lg:grid-cols-2 gap-4 mt-4">
-                <div class="rounded-2xl border border-white/10 bg-search-bar p-4 text-[#bdc1c6] leading-relaxed">
-                    <div class="text-[#e8eaed] font-semibold mb-2">기본현황</div>
-                    부산 하단동이 단순히 경유지가 아닌, 외국인 관광객이 '머물고, 소비하고 싶은' 목적지가 되기 위한 글로컬 크리에이터의 핵심 전략은 하단이 가진 독특한 자원을 '환승 시간'에 맞춘 매력적인 체험으로 바꾸는 것입니다.
-                </div>
-                <div class="rounded-2xl border border-white/10 bg-search-bar p-4 text-sm text-[#e8eaed]">
-                    <div class="text-[#e8eaed] font-semibold mb-2">하단 지역 핵심지표</div>
-                    <dl class="grid grid-cols-[120px_minmax(0,1fr)] gap-y-2">
-                        <dt class="text-[#9aa0a6]">주요 자원</dt><dd>을숙도, 동아대, 낙동강하구둑 (3大 랜드마크)</dd>
-                        <dt class="text-[#9aa0a6]">콘텐츠 접근성</dt><dd>부산 유일의 '강-바다' 접점 더블 역세권</dd>
-                        <dt class="text-[#9aa0a6]">잠재력</dt><dd>글로벌 로컬 콘텐츠 테스트베드(Testbed)</dd>
-                    </dl>
-                </div>
-            </div>
-        </section>
-                <section class="lg:col-span-1" id="results-section">
-            <p id="result-count" class="text-sm text-[#9aa0a6] mb-3">약 6개 결과</p>
-            <ul id="resultsList" class="space-y-6">
-                </ul>
-        </section>
-        
-                <aside id="knowledge-panel-aside" class="hidden lg:block lg:sticky lg:top-[76px] h-fit">
-            <div class="rounded-2xl border border-white/10 bg-search-bar overflow-hidden shadow">
-                <a href="#" target="_blank" rel="noreferrer" class="block">
-                    <img 
-                        referrerPolicy="no-referrer"
-                        src="https://anijoa7500-tech.github.io/busan-paris-festival/images/rmfzm.png" 
-                        alt="글로컬 크리에이터" 
-                        class="w-full aspect-square object-cover" 
-                    />
-                </a>
-                <div class="p-4">
-                    <div class="text-sm text-[#9aa0a6] mb-1">이름</div>
-                    <div class="text-base text-[#e8eaed] font-semibold">글로컬 크리에이터</div>
-                    <a href="#" target="_blank" rel="noreferrer" class="mt-2 inline-block text-google-blue text-sm hover:underline">부산외국어대학교 : 박광우 교수</a>
-                </div>
-            </div>
-        </aside>
-    </main>
+            <div class="grid lg:grid-cols-2 gap-4 mt-4">
+                <div class="rounded-2xl border border-white/10 bg-search-bar p-4 text-[#bdc1c6] leading-relaxed">
+                    <div class="text-[#e8eaed] font-semibold mb-2">기본현황</div>
+                    부산 하단동이 단순히 경유지가 아닌, 외국인 관광객이 '머물고, 소비하고 싶은' 목적지가 되기 위한 글로컬 크리에이터의 핵심 전략은 하단이 가진 독특한 자원을 '환승 시간'에 맞춘 매력적인 체험으로 바꾸는 것입니다.
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-search-bar p-4 text-sm text-[#e8eaed]">
+                    <div class="text-[#e8eaed] font-semibold mb-2">하단 지역 핵심지표</div>
+                    <dl class="grid grid-cols-[120px_minmax(0,1fr)] gap-y-2">
+                        <dt class="text-[#9aa0a6]">주요 자원</dt><dd>을숙도, 동아대, 낙동강하구둑 (3大 랜드마크)</dd>
+                        <dt class="text-[#9aa0a6]">콘텐츠 접근성</dt><dd>부산 유일의 '강-바다' 접점 더블 역세권</dd>
+                        <dt class="text-[#9aa0a6]">잠재력</dt><dd>글로벌 로컬 콘텐츠 테스트베드(Testbed)</dd>
+                    </dl>
+                </div>
+            </div>
+        </section>
+                <section class="lg:col-span-1" id="results-section">
+            <p id="result-count" class="text-sm text-[#9aa0a6] mb-3">약 6개 결과</p>
+            <ul id="resultsList" class="space-y-6">
+                </ul>
+        </section>
+        
+                <aside id="knowledge-panel-aside" class="hidden lg:block lg:sticky lg:top-[76px] h-fit">
+            <div class="rounded-2xl border border-white/10 bg-search-bar overflow-hidden shadow">
+                <a href="#" target="_blank" rel="noreferrer" class="block">
+                    <img 
+                        referrerPolicy="no-referrer"
+                        src="https://anijoa7500-tech.github.io/busan-paris-festival/images/rmfzm.png" 
+                        alt="글로컬 크리에이터" 
+                        class="w-full aspect-square object-cover" 
+                    />
+                </a>
+                <div class="p-4">
+                    <div class="text-sm text-[#9aa0a6] mb-1">이름</div>
+                    <div class="text-base text-[#e8eaed] font-semibold">글로컬 크리에이터</div>
+                    <a href="#" target="_blank" rel="noreferrer" class="mt-2 inline-block text-google-blue text-sm hover:underline">부산외국어대학교 : 박광우 교수</a>
+                </div>
+            </div>
+        </aside>
+    </main>
 
-    <footer class="max-w-7xl mx-auto px-4 mt-10 py-6 text-xs text-[#9aa0a6] border-t border-white/10">
-        <div class="flex flex-wrap items-center gap-4">
-            <span>대한민국 · 부산 · 하단</span>
-            <span class="text-[#5f6368]">·</span>
-            <span>이 미리보기는 학습·시연용 UI 클론입니다.</span>
-        </div>
-    </footer>
+    <footer class="max-w-7xl mx-auto px-4 mt-10 py-6 text-xs text-[#9aa0a6] border-t border-white/10">
+        <div class="flex flex-wrap items-center gap-4">
+            <span>대한민국 · 부산 · 하단</span>
+            <span class="text-[#5f6368]">·</span>
+            <span>이 미리보기는 학습·시연용 UI 클론입니다.</span>
+        </div>
+    </footer>
 </div>
+
+<div id="imageViewerModal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
+    <div class="relative max-w-7xl w-full h-full flex flex-col items-center justify-center">
+                <button id="closeViewerBtn" class="absolute top-4 right-4 text-white text-3xl font-light leading-none z-50 opacity-80 hover:opacity-100 transition">
+            &times;
+        </button>
+
+                <button id="prevImageBtn" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-5xl z-40 transition disabled:opacity-30 disabled:cursor-not-allowed">
+            &lsaquo;
+        </button>
+
+                <button id="nextImageBtn" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-5xl z-40 transition disabled:opacity-30 disabled:cursor-not-allowed">
+            &rsaquo;
+        </button>
+        
+                <div class="relative max-w-full max-h-full">
+            <img id="viewerImage" src="" alt="Full-screen image" class="max-h-[85vh] max-w-[90vw] object-contain shadow-2xl"/>
+            <div id="viewerCaption" class="absolute bottom-0 left-0 right-0 p-4 bg-black/50 text-white text-center text-sm"></div>
+        </div>
+        
+                <div id="imageIndexIndicator" class="absolute bottom-4 text-white/80 text-sm"></div>
+    </div>
+</div>
+
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Leaflet 아이콘 경로 명시적 설정
-    if (window.L && L.Icon && L.Icon.Default) {
-        L.Icon.Default.mergeOptions({
-            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
-        });
-    }
+    // Leaflet 아이콘 경로 명시적 설정
+    if (window.L && L.Icon && L.Icon.Default) {
+        L.Icon.Default.mergeOptions({
+            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
+        });
+    }
 
-    // ===============================
-    // 1. 데이터 정의 (Data Definitions)
-    // ===============================
-    
-    // 일반 검색 결과 데이터
-    const seedResults = [
-        { title: "하단 숙박/체험 로컬 여행 상품 리스트 · 하단.음숙.다.대.허브", url: "/busan-paris-festival/tour-list.html", displayUrl: "hadan.umsuk.daedae.heobeo", snippet: "부산 사하구 하단 문화의거리 기반의 로컬 여행 상품 추천 목록입니다. K-인싸 투어, 1일 비누 만들기, 로컬 맛집 등 다양한 테마별 액티비티와 숙박 정보를 제공합니다.", rating: 4.6, reviews: 524 },
-        { title: "[부산한정] NFC 비누비누 베이베 키링 · GLOCAL:HD", url: "/busan-paris-festival/product-page.html", displayUrl: "glocal-hd.com/product/...r", snippet: "사하구 하단 문화의거리에서 열리는 프렌치 마르쉐 & 공연 축제입니다. 부산외국어대학교 글로컬 크리에이터 하단 팀이 함께하는 프로젝트로, 일정·프로그램·티켓·지도 정보를 한눈에 확인할 수 있습니다.", rating: 4.9, reviews: 1482 },
-        { title: "부산 파리 마르쉐 · 공식 안내(일정·오시는 길)", url: "/busan-paris-festival/paris-festival.html", displayUrl: "busan-parisfest.kr", snippet: "사하구 하단 문화의거리에서 열리는 프렌치 마르쉐 & 공연 축제입니다. 프랑스의 마르쉐와 카페 문화를 옮겨온 도시형 축제로, 디저트/치즈, 공연, 포토스팟을 즐길 수 있습니다. (일정: 2025. 12. 6(토) - 12. 7(일))", rating: 4.7, reviews: 861 },
-        { title: "하단 재즈 나잇 · 공연 라인업 및 타임테이블", url: "https://hadanjazz.kr/lineup", displayUrl: "hadanjazz.kr", snippet: "하단역 일대에서 열리는 도심형 재즈 축제입니다. 국내외 재즈 아티스트, 게스트 세션 정보와 공연 시간표를 미리 만나보세요.", rating: 4.8, reviews: 1023 },
-        { title: "다대포 선셋 포토워크 · 참가자 모집(하단 출발)", url: "https://www.dadaepo-sunset.com/walk", displayUrl: "dadaepo-sunset.com", snippet: "하단에서 출발해 다대포 해변 일몰 명소를 걷는 포토워크입니다. 촬영 포인트, 복장 가이드, 날씨 체크리스트를 참고해보세요.", rating: 4.5, reviews: 392 },
-        { title: "로컬 베이커리 위크 in 하단 · 참가 매장 안내", url: "https://bakeryweek.kr/hadan", displayUrl: "bakeryweek.kr", snippet: "하단의 개성 있는 로컬 베이커리 20여 곳이 참여합니다. 시그니처 메뉴, 빵 굽는 시간, 스탬프 위치와 한정 굿즈 정보를 제공합니다.", rating: 4.6, reviews: 745 },
-    ];
-    
-    // 이미지 검색 결과 데이터 (요청하신 8개의 이미지로 재정의) 👈 수정된 부분
-    const imageResults = [
-        { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/0ddwdw.jpg", caption: "새로운 이미지 1", source: "Local" },
-        { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/1000113668.jpg", caption: "새로운 이미지 2", source: "Local" },
-        { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/dddd.jpg", caption: "새로운 이미지 3", source: "Local" },
-        { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/dddddd.jpg", caption: "새로운 이미지 4", source: "Local" },
-        { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/ddddddd.jpg", caption: "새로운 이미지 5", source: "Local" },
-        { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/ddddddddwdwd.jpg", caption: "새로운 이미지 6", source: "Local" },
-        { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/dwdwda.jpg", caption: "새로운 이미지 7", source: "Local" },
-        { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/Gemini_Generated_Image_px7fb9px7fb9px7f.png", caption: "기본 이미지 8", source: "Local" }, // 기존에 있던 예시 이미지 하나 추가
-    ];
-    
-    // 동영상 검색 결과 데이터
-    const videoResults = [
-        {
-            title: "하단: 낙동강 하구의 숨겨진 보석 | 글로컬크리에이터 탐방",
-            url: "https://www.youtube.com/watch?v=hadan-glocal-1",
-            displayUrl: "www.youtube.com › watch",
-            snippet: "부산외국어대학교 글로컬크리에이터 팀이 소개하는 하단동의 로컬 매력. 을숙도, 동아대 문화의 거리, 서부 터미널 일대를 중심으로 하단의 숨겨진 장소들을 탐험합니다.",
-            thumbnail: "https://anijoa7500-tech.github.io/busan-paris-festival/images/video-thumb-1.jpg",
-            duration: "3:45"
-        },
-        {
-            title: "[Shorts] 하단 레트로 베이커리 맛집 3선",
-            url: "https://www.youtube.com/shorts/hadan-bakery",
-            displayUrl: "www.youtube.com › shorts",
-            snippet: "하단 문화의 거리에 위치한 레트로 감성 베이커리 3곳을 짧게 소개합니다. 달콤한 빵과 커피로 하루를 시작해보세요.",
-            thumbnail: "https://anijoa7500-tech.github.io/busan-paris-festival/images/video-thumb-2.jpg",
-            duration: "0:42"
-        },
-        {
-            title: "글로컬 크리에이터 사업단 - 2024년 성과보고회 영상",
-            url: "https://www.youtube.com/watch?v=busan-glocal-report",
-            displayUrl: "www.youtube.com › watch",
-            snippet: "부산외국어대학교 글로컬 크리에이터 사업단의 2024년 주요 활동과 성과를 요약한 영상입니다. 지역 사회와의 협력 프로젝트를 중심으로 다룹니다.",
-            thumbnail: "https://anijoa7500-tech.github.io/busan-paris-festival/images/video-thumb-3.jpg",
-            duration: "12:15"
-        },
-        {
-            title: "하단 재즈 나잇 - 2023년 하이라이트",
-            url: "https://www.youtube.com/watch?v=hadan-jazz",
-            displayUrl: "www.youtube.com › watch",
-            snippet: "하단 문화의 거리에서 열린 '하단 재즈 나잇'의 생생한 공연 현장과 분위기를 담았습니다. 부산 시민과 외국인 관광객이 함께 즐긴 축제의 하이라이트.",
-            thumbnail: "https://anijoa7500-tech.github.io/busan-paris-festival/images/video-thumb-4.jpg",
-            duration: "5:30"
-        },
-    ];
-
-
-    // ===============================
-    // 2. 렌더링 함수 (Rendering Functions)
-    // ===============================
-    
-    // 일반 검색 결과를 렌더링하는 함수 (전체 탭)
-    function renderResults(results) {
-        const list = document.getElementById('resultsList');
-        const countElement = document.getElementById('result-count');
-        if (!list || !countElement) return;
-        
-        // 결과 목록 레이아웃 설정
-        list.className = 'space-y-6';
-        countElement.textContent = `약 ${results.length}개 결과`;
-        
-        list.innerHTML = results.map(r => `
-            <li class="group border-b border-white/10 pb-4">
-                <div class="text-xs text-[#9aa0a6] mb-1">${r.displayUrl}</div>
-                <a href="${r.url}" target="${r.url.startsWith('http') ? '_blank' : '_self'}" rel="noreferrer" class="block">
-                    <div class="text-lg md:text-xl leading-snug text-google-blue group-hover:underline">${r.title}</div>
-                </a>
-                <div class="mt-1 flex items-center gap-2 text-sm text-[#e8eaed]">
-                    <span class="font-semibold text-google-yellow">★ ${r.rating}</span>
-                    <span class="text-[#9aa0a6]">(${r.reviews.toLocaleString()}건의 리뷰)</span>
-                </div>
-                <div class="mt-1 text-[#bdc1c6] leading-relaxed">${r.snippet}</div>
-            </li>
-        `).join('');
-    }
-
-    // 이미지 갤러리 검색 결과를 렌더링하는 함수 (이미지 탭)
-    function renderImageGallery(images) {
-        const list = document.getElementById('resultsList');
-        const countElement = document.getElementById('result-count');
-        
-        // 결과 목록 레이아웃을 Grid로 변경 (모바일 2열, PC 4열)
-        list.className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4';
-        countElement.textContent = `이미지 약 ${images.length}개`;
-        
-        // 이미지 배열이 비어 있으면 "표시할 이미지 없음" 메시지 출력
-        if (images.length === 0) {
-            list.innerHTML = `
-                <li class="col-span-full text-center text-[#9aa0a6] p-4">
-                    표시할 이미지가 없습니다.
-                </li>
-            `;
-        } else {
-            list.innerHTML = images.map(img => `
-                <li class="rounded-lg overflow-hidden border border-white/10 bg-search-bar hover:ring-2 ring-google-blue transition duration-150 cursor-pointer">
-                    <a href="${img.url}" target="_blank" rel="noreferrer" class="block">
-                        <img
-                            referrerPolicy="no-referrer"
-                            src="${img.url}"
-                            alt="${img.caption}"
-                            class="w-full h-32 md:h-40 object-cover"
-                            loading="lazy"
-                            onerror="this.onerror=null;this.src='https://via.placeholder.com/300x200?text=Image+Load+Fail';"
-                        />
-                        <div class="p-2">
-                            <div class="text-xs font-medium text-[#e8eaed] truncate">${img.caption}</div>
-                            <div class="text-[10px] text-[#9aa0a6] truncate">${img.source}</div>
-                        </div>
-                    </a>
-                </li>
-            `).join('');
-        }
-    }
-
-    // 동영상 검색 결과를 렌더링하는 함수 (동영상 탭)
-    function renderVideoResults(results) {
-        const list = document.getElementById('resultsList');
-        const countElement = document.getElementById('result-count');
-        
-        // 결과 목록 레이아웃은 일반 목록과 유사하게 유지
-        list.className = 'space-y-6';
-        countElement.textContent = `약 ${results.length}개의 동영상 결과`;
-        
-        list.innerHTML = results.map(r => `
-            <li class="group border-b border-white/10 pb-4">
-                <div class="text-xs text-[#9aa0a6] mb-1">${r.displayUrl}</div>
-                <a href="${r.url}" target="_blank" rel="noreferrer" class="flex gap-4">
-                    <div class="relative w-32 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-[#303134]">
-                        <img
-                            referrerPolicy="no-referrer"
-                            src="${r.thumbnail}"
-                            alt="썸네일"
-                            class="w-full h-full object-cover"
-                            loading="lazy"
-                            onerror="this.onerror=null;this.src='https://via.placeholder.com/128x80?text=Video';"
-                        />
-                        <div class="absolute bottom-1 right-1 bg-black/70 text-white text-[10px] px-1 rounded">
-                            ${r.duration}
-                        </div>
-                    </div>
-                    <div class="flex-1">
-                        <div class="text-lg leading-snug text-google-blue group-hover:underline">${r.title}</div>
-                        <div class="text-sm text-[#bdc1c6] mt-1 leading-relaxed">${r.snippet}</div>
-                    </div>
-                </a>
-            </li>
-        `).join('');
-    }
-
-    // 지도 탭이 활성화될 때 검색 결과를 대체하는 함수
-    function renderMapTab() {
-        const resultsSection = document.getElementById('results-section');
-        const countElement = document.getElementById('result-count');
-        const list = document.getElementById('resultsList');
-
-        // 지도 탭에서는 일반 검색 결과를 표시하지 않고 지도만 중앙에 표시
-        countElement.textContent = ``;
-        list.innerHTML = `
-            <div class="p-4 text-[#bdc1c6] text-center">
-                지도는 상단 요약 영역에서 볼 수 있습니다. (데모 페이지)
-                <div class="mt-2 text-google-blue cursor-pointer" onclick="changeTab('all')">
-                    [전체] 탭에서 지도 보기
-                </div>
-            </div>
-        `;
-
-        // 지도가 보이도록 상단 요약 섹션 활성화
-        const summarySection = document.getElementById('summary-section');
-        summarySection.style.display = 'block';
-        resultsSection.classList.add('lg:col-span-1');
-        resultsSection.classList.remove('col-span-full');
-    }
-
-    // ===============================
-    // 3. 탭 전환 로직 (Tab Switching Logic)
-    // ===============================
-
-    let currentTab = 'all';
-
-    function changeTab(tabName) {
-        if (currentTab === tabName) return;
-
-        // 1. 탭 활성화/비활성화 UI 업데이트
-        document.querySelectorAll('.tab-item').forEach(tab => {
-            tab.classList.remove('border-b-2', 'border-google-blue', 'text-google-blue', 'font-semibold');
-            tab.classList.add('hover:text-white');
-        });
-
-        const activeTab = document.getElementById(`tab-${tabName}`);
-        if (activeTab) {
-            activeTab.classList.add('border-b-2', 'border-google-blue', 'text-google-blue', 'font-semibold');
-            activeTab.classList.remove('hover:text-white');
-        }
-
-        // 2. 결과 내용 전환
-        const summarySection = document.getElementById('summary-section');
-        const resultsSection = document.getElementById('results-section');
-        const asidePanel = document.getElementById('knowledge-panel-aside'); // 사이드바 엘리먼트 가져오기
-        
-        summarySection.style.display = 'none'; // 기본적으로 상단 요약 섹션 숨김
-
-        // 사이드바 (Knowledge Panel) 표시/숨김 로직: 'image'와 'video' 탭에서만 숨김
-        if (asidePanel) {
-            if (tabName === 'all' || tabName === 'map') {
-                asidePanel.style.display = ''; // CSS 기본값 (lg:block)으로 복원하여 표시
-            } else {
-                asidePanel.style.display = 'none'; // 숨김
-            }
-        }
-
-        if (tabName === 'all') {
-            // '전체' 탭: 상단 요약/지도 표시, 일반 검색 결과 표시
-            summarySection.style.display = 'block';
-            resultsSection.classList.add('lg:col-span-1');
-            resultsSection.classList.remove('col-span-full');
-            renderResults(seedResults);
-
-        } else if (tabName === 'image') {
-            // '이미지' 탭: 상단 요약/지도 숨김, 이미지 갤러리 표시 (사이드바 숨김)
-            resultsSection.classList.remove('lg:col-span-1');
-            resultsSection.classList.add('col-span-full');
-            renderImageGallery(imageResults); // 이제 이미지가 표시됨
-
-        } else if (tabName === 'video') {
-            // '동영상' 탭: 상단 요약/지도 숨김, 동영상 결과 표시 (사이드바 숨김)
-            resultsSection.classList.remove('lg:col-span-1');
-            resultsSection.classList.add('col-span-full');
-            renderVideoResults(videoResults);
-
-        } else if (tabName === 'map') {
-            // '지도' 탭: 상단 요약/지도 표시, 검색 결과 영역에 안내 메시지 표시 (사이드바 표시)
-            summarySection.style.display = 'block';
-            renderMapTab();
-        }
-
-        currentTab = tabName;
-        // 탭이 변경되면 지도 크기를 재조정하여 레이아웃 문제 방지 (지도가 보일 때만)
-        if (tabName === 'all' || tabName === 'map') {
-            forceMapInvalidate();
-        }
-    }
+    // ===============================
+    // 1. 데이터 정의 (Data Definitions)
+    // ===============================
+    
+    // 일반 검색 결과 데이터
+    const seedResults = [
+        { title: "하단 숙박/체험 로컬 여행 상품 리스트 · 하단.음숙.다.대.허브", url: "/busan-paris-festival/tour-list.html", displayUrl: "hadan.umsuk.daedae.heobeo", snippet: "부산 사하구 하단 문화의거리 기반의 로컬 여행 상품 추천 목록입니다. K-인싸 투어, 1일 비누 만들기, 로컬 맛집 등 다양한 테마별 액티비티와 숙박 정보를 제공합니다.", rating: 4.6, reviews: 524 },
+        { title: "[부산한정] NFC 비누비누 베이베 키링 · GLOCAL:HD", url: "/busan-paris-festival/product-page.html", displayUrl: "glocal-hd.com/product/...r", snippet: "사하구 하단 문화의거리에서 열리는 프렌치 마르쉐 & 공연 축제입니다. 부산외국어대학교 글로컬 크리에이터 하단 팀이 함께하는 프로젝트로, 일정·프로그램·티켓·지도 정보를 한눈에 확인할 수 있습니다.", rating: 4.9, reviews: 1482 },
+        { title: "부산 파리 마르쉐 · 공식 안내(일정·오시는 길)", url: "/busan-paris-festival/paris-festival.html", displayUrl: "busan-parisfest.kr", snippet: "사하구 하단 문화의거리에서 열리는 프렌치 마르쉐 & 공연 축제입니다. 프랑스의 마르쉐와 카페 문화를 옮겨온 도시형 축제로, 디저트/치즈, 공연, 포토스팟을 즐길 수 있습니다. (일정: 2025. 12. 6(토) - 12. 7(일))", rating: 4.7, reviews: 861 },
+        { title: "하단 재즈 나잇 · 공연 라인업 및 타임테이블", url: "https://hadanjazz.kr/lineup", displayUrl: "hadanjazz.kr", snippet: "하단역 일대에서 열리는 도심형 재즈 축제입니다. 국내외 재즈 아티스트, 게스트 세션 정보와 공연 시간표를 미리 만나보세요.", rating: 4.8, reviews: 1023 },
+        { title: "다대포 선셋 포토워크 · 참가자 모집(하단 출발)", url: "https://www.dadaepo-sunset.com/walk", displayUrl: "dadaepo-sunset.com", snippet: "하단에서 출발해 다대포 해변 일몰 명소를 걷는 포토워크입니다. 촬영 포인트, 복장 가이드, 날씨 체크리스트를 참고해보세요.", rating: 4.5, reviews: 392 },
+        { title: "로컬 베이커리 위크 in 하단 · 참가 매장 안내", url: "https://bakeryweek.kr/hadan", displayUrl: "bakeryweek.kr", snippet: "하단의 개성 있는 로컬 베이커리 20여 곳이 참여합니다. 시그니처 메뉴, 빵 굽는 시간, 스탬프 위치와 한정 굿즈 정보를 제공합니다.", rating: 4.6, reviews: 745 },
+    ];
+    
+    // 이미지 검색 결과 데이터 (요청하신 8개의 이미지로 재정의)
+    const imageResults = [
+        { url: "images/0ddwdw.jpg", caption: "글로컬 하단 팀원 1", source: "Local" },
+        { url: "images/1000113668.jpg", caption: "글로컬 하단 팀원 2", source: "Local" },
+        { url: "images/dddd.jpg", caption: "글로컬 하단 팀원 3", source: "Local" },
+        { url: "images/dddddd.jpg", caption: "글로컬 하단 팀원 4", source: "Local" },
+        { url: "images/ddddddd.jpg", caption: "글로컬 하단 팀원 5", source: "Local" },
+        { url: "images/ddddddddwdwd.jpg", caption: "글로컬 하단 팀원 6", source: "Local" },
+        { url: "images/dwdwda.jpg", caption: "글로컬 하단 팀원 7", source: "Local" },
+        { url: "https://anijoa7500-tech.github.io/busan-paris-festival/images/Gemini_Generated_Image_px7fb9px7fb9px7f.png", caption: "글로컬 크리에이터 팀 로고", source: "Local" }, 
+    ];
+    
+    // 동영상 검색 결과 데이터
+    const videoResults = [
+        {
+            title: "하단: 낙동강 하구의 숨겨진 보석 | 글로컬크리에이터 탐방",
+            url: "https://www.youtube.com/watch?v=hadan-glocal-1",
+            displayUrl: "www.youtube.com › watch",
+            snippet: "부산외국어대학교 글로컬크리에이터 팀이 소개하는 하단동의 로컬 매력. 을숙도, 동아대 문화의 거리, 서부 터미널 일대를 중심으로 하단의 숨겨진 장소들을 탐험합니다.",
+            thumbnail: "https://anijoa7500-tech.github.io/busan-paris-festival/images/video-thumb-1.jpg",
+            duration: "3:45"
+        },
+        {
+            title: "[Shorts] 하단 레트로 베이커리 맛집 3선",
+            url: "https://www.youtube.com/shorts/hadan-bakery",
+            displayUrl: "www.youtube.com › shorts",
+            snippet: "하단 문화의 거리에 위치한 레트로 감성 베이커리 3곳을 짧게 소개합니다. 달콤한 빵과 커피로 하루를 시작해보세요.",
+            thumbnail: "https://anijoa7500-tech.github.io/busan-paris-festival/images/video-thumb-2.jpg",
+            duration: "0:42"
+        },
+        {
+            title: "글로컬 크리에이터 사업단 - 2024년 성과보고회 영상",
+            url: "https://www.youtube.com/watch?v=busan-glocal-report",
+            displayUrl: "www.youtube.com › watch",
+            snippet: "부산외국어대학교 글로컬 크리에이터 사업단의 2024년 주요 활동과 성과를 요약한 영상입니다. 지역 사회와의 협력 프로젝트를 중심으로 다룹니다.",
+            thumbnail: "https://anijoa7500-tech.github.io/busan-paris-festival/images/video-thumb-3.jpg",
+            duration: "12:15"
+        },
+        {
+            title: "하단 재즈 나잇 - 2023년 하이라이트",
+            url: "https://www.youtube.com/watch?v=hadan-jazz",
+            displayUrl: "www.youtube.com › watch",
+            snippet: "하단 문화의 거리에서 열린 '하단 재즈 나잇'의 생생한 공연 현장과 분위기를 담았습니다. 부산 시민과 외국인 관광객이 함께 즐긴 축제의 하이라이트.",
+            thumbnail: "https://anijoa7500-tech.github.io/busan-paris-festival/images/video-thumb-4.jpg",
+            duration: "5:30"
+        },
+    ];
 
 
-    // ===============================
-    // 4. 지도 초기화 및 유틸리티 (Map and Utilities)
-    // ===============================
+    // ===============================
+    // 2. 렌더링 함수 (Rendering Functions)
+    // ===============================
+    
+    // 일반 검색 결과를 렌더링하는 함수 (전체 탭)
+    function renderResults(results) {
+        const list = document.getElementById('resultsList');
+        const countElement = document.getElementById('result-count');
+        if (!list || !countElement) return;
+        
+        // 결과 목록 레이아웃 설정
+        list.className = 'space-y-6';
+        countElement.textContent = `약 ${results.length}개 결과`;
+        
+        list.innerHTML = results.map(r => `
+            <li class="group border-b border-white/10 pb-4">
+                <div class="text-xs text-[#9aa0a6] mb-1">${r.displayUrl}</div>
+                <a href="${r.url}" target="${r.url.startsWith('http') ? '_blank' : '_self'}" rel="noreferrer" class="block">
+                    <div class="text-lg md:text-xl leading-snug text-google-blue group-hover:underline">${r.title}</div>
+                </a>
+                <div class="mt-1 flex items-center gap-2 text-sm text-[#e8eaed]">
+                    <span class="font-semibold text-google-yellow">★ ${r.rating}</span>
+                    <span class="text-[#9aa0a6]">(${r.reviews.toLocaleString()}건의 리뷰)</span>
+                </div>
+                <div class="mt-1 text-[#bdc1c6] leading-relaxed">${r.snippet}</div>
+            </li>
+        `).join('');
+    }
 
-    let mapInstance = null;
-    let mapInitialized = false;
-    let mapContainerObserver = null;
+    // 이미지 갤러리 검색 결과를 렌더링하는 함수 (이미지 탭)
+    // 💡 수정: <a> 태그를 <div>로 변경하고 onclick 이벤트 핸들러를 추가합니다.
+    function renderImageGallery(images) {
+        const list = document.getElementById('resultsList');
+        const countElement = document.getElementById('result-count');
+        
+        // 결과 목록 레이아웃을 Grid로 변경 (모바일 2열, PC 4열)
+        list.className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-4';
+        countElement.textContent = `이미지 약 ${images.length}개`;
+        
+        // 이미지 배열이 비어 있으면 "표시할 이미지 없음" 메시지 출력
+        if (images.length === 0) {
+            list.innerHTML = `
+                <li class="col-span-full text-center text-[#9aa0a6] p-4">
+                    표시할 이미지가 없습니다.
+                </li>
+            `;
+        } else {
+            list.innerHTML = images.map((img, i) => `
+                <li class="rounded-lg overflow-hidden border border-white/10 bg-search-bar hover:ring-2 ring-google-blue transition duration-150 cursor-pointer" onclick="openImageViewer(${i})">
+                    <div class="block">
+                        <img
+                            referrerPolicy="no-referrer"
+                            src="${img.url}"
+                            alt="${img.caption}"
+                            class="w-full h-32 md:h-40 object-cover"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='https://via.placeholder.com/300x200?text=Image+Load+Fail';"
+                        />
+                        <div class="p-2">
+                            <div class="text-xs font-medium text-[#e8eaed] truncate">${img.caption}</div>
+                            <div class="text-[10px] text-[#9aa0a6] truncate">${img.source}</div>
+                        </div>
+                    </div>
+                </li>
+            `).join('');
+        }
+    }
 
-    function forceMapInvalidate() {
-        if (mapInstance && mapInitialized) {
-            // 지도 크기 변경 감지 후 지도를 다시 그리도록 강제
-            mapInstance.invalidateSize(true); 
-        }
-    }
+    // 동영상 검색 결과를 렌더링하는 함수 (동영상 탭)
+    function renderVideoResults(results) {
+        const list = document.getElementById('resultsList');
+        const countElement = document.getElementById('result-count');
+        
+        // 결과 목록 레이아웃은 일반 목록과 유사하게 유지
+        list.className = 'space-y-6';
+        countElement.textContent = `약 ${results.length}개의 동영상 결과`;
+        
+        list.innerHTML = results.map(r => `
+            <li class="group border-b border-white/10 pb-4">
+                <div class="text-xs text-[#9aa0a6] mb-1">${r.displayUrl}</div>
+                <a href="${r.url}" target="_blank" rel="noreferrer" class="flex gap-4">
+                    <div class="relative w-32 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-[#303134]">
+                        <img
+                            referrerPolicy="no-referrer"
+                            src="${r.thumbnail}"
+                            alt="썸네일"
+                            class="w-full h-full object-cover"
+                            loading="lazy"
+                            onerror="this.onerror=null;this.src='https://via.placeholder.com/128x80?text=Video';"
+                        />
+                        <div class="absolute bottom-1 right-1 bg-black/70 text-white text-[10px] px-1 rounded">
+                            ${r.duration}
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-lg leading-snug text-google-blue group-hover:underline">${r.title}</div>
+                        <div class="text-sm text-[#bdc1c6] mt-1 leading-relaxed">${r.snippet}</div>
+                    </div>
+                </a>
+            </li>
+        `).join('');
+    }
 
-    function initializeMap() {
-        const L = window.L;
-        const el = document.getElementById("mapPreview");
-        
-        if (!L || !el || mapInitialized) {
-            return;
-        }
+    // 지도 탭이 활성화될 때 검색 결과를 대체하는 함수
+    function renderMapTab() {
+        const resultsSection = document.getElementById('results-section');
+        const countElement = document.getElementById('result-count');
+        const list = document.getElementById('resultsList');
 
-        try {
-            mapInitialized = true;
-            
-            if (mapInstance) { 
-                mapInstance.remove(); 
-                mapInstance = null;
-            }
+        // 지도 탭에서는 일반 검색 결과를 표시하지 않고 지도만 중앙에 표시
+        countElement.textContent = ``;
+        list.innerHTML = `
+            <div class="p-4 text-[#bdc1c6] text-center">
+                지도는 상단 요약 영역에서 볼 수 있습니다. (데모 페이지)
+                <div class="mt-2 text-google-blue cursor-pointer" onclick="changeTab('all')">
+                    [전체] 탭에서 지도 보기
+                </div>
+            </div>
+        `;
 
-            // 1. 지도 초기화 (부산 하단역 근처 좌표)
-            mapInstance = L.map(el, { 
-                zoomControl: false, 
-                scrollWheelZoom: false 
-            }).setView([35.104, 128.966], 15);
+        // 지도가 보이도록 상단 요약 섹션 활성화
+        const summarySection = document.getElementById('summary-section');
+        summarySection.style.display = 'block';
+        resultsSection.classList.add('lg:col-span-1');
+        resultsSection.classList.remove('col-span-full');
+    }
 
-            // 2. 타일셋 적용 (Esri WorldImagery)
-            L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-                attribution: '', 
-                maxZoom: 19,
-                detectRetina: true
-            }).addTo(mapInstance);
-            
-            // 3. 마커 추가
-            L.marker([35.104, 128.966])
-                .addTo(mapInstance)
-                .bindPopup("<b>글로컬크리에이터 하단팀 거점</b><br>하단역 5번 출구 부근")
-                .openPopup();
-            
-            // 4. 레이아웃 변경 감지 시 지도 크기 재조정
-            mapInstance.whenReady(function() {
-                this.invalidateSize(true); 
-                setTimeout(forceMapInvalidate, 500); 
-                setTimeout(forceMapInvalidate, 1000); 
-            });
+    // ===============================
+    // 3. 탭 전환 로직 (Tab Switching Logic)
+    // ===============================
 
-            mapContainerObserver = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.type === 'attributes' || mutation.type === 'childlist') {
-                        forceMapInvalidate();
-                    }
-                });
-            });
+    let currentTab = 'all';
 
-            const parentElement = el.parentElement;
-            if (parentElement) {
-                mapContainerObserver.observe(parentElement, { 
-                    attributes: true, 
-                    childList: true, 
-                    subtree: true 
-                });
-            }
-            
-            window.addEventListener('resize', forceMapInvalidate);
+    function changeTab(tabName) {
+        if (currentTab === tabName) return;
 
-        } catch (err) {
-            console.error("Leaflet map initialization failed:", err);
-            mapInitialized = false;
-        }
-    }
+        // 1. 탭 활성화/비활성화 UI 업데이트
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.classList.remove('border-b-2', 'border-google-blue', 'text-google-blue', 'font-semibold');
+            tab.classList.add('hover:text-white');
+        });
 
-    // 초기화 함수 실행 시점
-    document.addEventListener('DOMContentLoaded', () => {
-        // 페이지 로드 시 'all' 탭으로 시작
-        renderResults(seedResults);
-        initializeMap();
-    });
-    
-    window.addEventListener('load', initializeMap);
-    
-    window.addEventListener('beforeunload', () => {
-        if (mapContainerObserver) {
-            mapContainerObserver.disconnect();
-        }
-    });
+        const activeTab = document.getElementById(`tab-${tabName}`);
+        if (activeTab) {
+            activeTab.classList.add('border-b-2', 'border-google-blue', 'text-google-blue', 'font-semibold');
+            activeTab.classList.remove('hover:text-white');
+        }
+
+        // 2. 결과 내용 전환
+        const summarySection = document.getElementById('summary-section');
+        const resultsSection = document.getElementById('results-section');
+        const asidePanel = document.getElementById('knowledge-panel-aside'); // 사이드바 엘리먼트 가져오기
+        
+        summarySection.style.display = 'none'; // 기본적으로 상단 요약 섹션 숨김
+
+        // 사이드바 (Knowledge Panel) 표시/숨김 로직: 'image'와 'video' 탭에서만 숨김
+        if (asidePanel) {
+            if (tabName === 'all' || tabName === 'map') {
+                asidePanel.style.display = ''; // CSS 기본값 (lg:block)으로 복원하여 표시
+            } else {
+                asidePanel.style.display = 'none'; // 숨김
+            }
+        }
+
+        if (tabName === 'all') {
+            // '전체' 탭: 상단 요약/지도 표시, 일반 검색 결과 표시
+            summarySection.style.display = 'block';
+            resultsSection.classList.add('lg:col-span-1');
+            resultsSection.classList.remove('col-span-full');
+            renderResults(seedResults);
+
+        } else if (tabName === 'image') {
+            // '이미지' 탭: 상단 요약/지도 숨김, 이미지 갤러리 표시 (사이드바 숨김)
+            resultsSection.classList.remove('lg:col-span-1');
+            resultsSection.classList.add('col-span-full');
+            renderImageGallery(imageResults);
+
+        } else if (tabName === 'video') {
+            // '동영상' 탭: 상단 요약/지도 숨김, 동영상 결과 표시 (사이드바 숨김)
+            resultsSection.classList.remove('lg:col-span-1');
+            resultsSection.classList.add('col-span-full');
+            renderVideoResults(videoResults);
+
+        } else if (tabName === 'map') {
+            // '지도' 탭: 상단 요약/지도 표시, 검색 결과 영역에 안내 메시지 표시 (사이드바 표시)
+            summarySection.style.display = 'block';
+            renderMapTab();
+        }
+
+        currentTab = tabName;
+        // 탭이 변경되면 지도 크기를 재조정하여 레이아웃 문제 방지 (지도가 보일 때만)
+        if (tabName === 'all' || tabName === 'map') {
+            forceMapInvalidate();
+        }
+    }
+
+
+    // ===============================
+    // 4. 지도 초기화 및 유틸리티 (Map and Utilities)
+    // ===============================
+
+    let mapInstance = null;
+    let mapInitialized = false;
+    let mapContainerObserver = null;
+
+    function forceMapInvalidate() {
+        if (mapInstance && mapInitialized) {
+            // 지도 크기 변경 감지 후 지도를 다시 그리도록 강제
+            mapInstance.invalidateSize(true); 
+        }
+    }
+
+    function initializeMap() {
+        const L = window.L;
+        const el = document.getElementById("mapPreview");
+        
+        if (!L || !el || mapInitialized) {
+            return;
+        }
+
+        try {
+            mapInitialized = true;
+            
+            if (mapInstance) { 
+                mapInstance.remove(); 
+                mapInstance = null;
+            }
+
+            // 1. 지도 초기화 (부산 하단역 근처 좌표)
+            mapInstance = L.map(el, { 
+                zoomControl: false, 
+                scrollWheelZoom: false 
+            }).setView([35.104, 128.966], 15);
+
+            // 2. 타일셋 적용 (Esri WorldImagery)
+            L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+                attribution: '', 
+                maxZoom: 19,
+                detectRetina: true
+            }).addTo(mapInstance);
+            
+            // 3. 마커 추가
+            L.marker([35.104, 128.966])
+                .addTo(mapInstance)
+                .bindPopup("<b>글로컬크리에이터 하단팀 거점</b><br>하단역 5번 출구 부근")
+                .openPopup();
+            
+            // 4. 레이아웃 변경 감지 시 지도 크기 재조정
+            mapInstance.whenReady(function() {
+                this.invalidateSize(true); 
+                setTimeout(forceMapInvalidate, 500); 
+                setTimeout(forceMapInvalidate, 1000); 
+            });
+
+            mapContainerObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' || mutation.type === 'childlist') {
+                        forceMapInvalidate();
+                    }
+                });
+            });
+
+            const parentElement = el.parentElement;
+            if (parentElement) {
+                mapContainerObserver.observe(parentElement, { 
+                    attributes: true, 
+                    childList: true, 
+                    subtree: true 
+                });
+            }
+            
+            window.addEventListener('resize', forceMapInvalidate);
+
+        } catch (err) {
+            console.error("Leaflet map initialization failed:", err);
+            mapInitialized = false;
+        }
+    }
+
+    // ===============================
+    // 5. 이미지 뷰어 로직 (Image Viewer Logic)
+    // ===============================
+    
+    let currentImageIndex = -1; // 현재 모달에서 보고 있는 이미지의 인덱스
+
+    function updateImageViewerUI(index) {
+        const image = imageResults[index];
+        if (!image) return;
+
+        document.getElementById('viewerImage').src = image.url;
+        document.getElementById('viewerCaption').textContent = image.caption;
+        document.getElementById('imageIndexIndicator').textContent = `${index + 1} / ${imageResults.length}`;
+
+        // 버튼 활성화/비활성화 처리 (첫 이미지/마지막 이미지 체크)
+        document.getElementById('prevImageBtn').disabled = index === 0;
+        document.getElementById('nextImageBtn').disabled = index === imageResults.length - 1;
+    }
+
+    function openImageViewer(index) {
+        if (index < 0 || index >= imageResults.length) return;
+
+        currentImageIndex = index;
+        updateImageViewerUI(currentImageIndex);
+
+        const modal = document.getElementById('imageViewerModal');
+        modal.style.display = 'flex'; // hidden -> flex로 변경하여 표시
+        document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+    }
+
+    window.closeImageViewer = function() {
+        const modal = document.getElementById('imageViewerModal');
+        modal.style.display = 'none'; // flex -> none으로 변경하여 숨김
+        document.body.style.overflow = ''; // 배경 스크롤 허용
+        currentImageIndex = -1;
+    }
+
+    window.navigateImage = function(direction) {
+        let newIndex = currentImageIndex + direction;
+
+        // 경계를 넘어가지 않도록 방지
+        if (newIndex >= 0 && newIndex < imageResults.length) {
+            currentImageIndex = newIndex;
+            updateImageViewerUI(currentImageIndex);
+        }
+    }
+
+    function setupImageViewerEvents() {
+        // 모달 버튼 이벤트 리스너 설정
+        document.getElementById('closeViewerBtn').onclick = closeImageViewer;
+        document.getElementById('prevImageBtn').onclick = () => navigateImage(-1);
+        document.getElementById('nextImageBtn').onclick = () => navigateImage(1);
+
+        // 배경 클릭 시 닫기
+        const modal = document.getElementById('imageViewerModal');
+        modal.addEventListener('click', (e) => {
+            // 모달 배경을 클릭했을 때만 닫기 (이미지, 버튼 등 자식 요소를 클릭한 경우는 제외)
+            if (e.target.id === 'imageViewerModal') {
+                closeImageViewer();
+            }
+        });
+
+        // 키보드 이벤트 (ArrowLeft, ArrowRight, Escape)
+        document.addEventListener('keydown', (e) => {
+            if (currentImageIndex !== -1) { // 모달이 열려 있을 때만 동작
+                if (e.key === 'ArrowRight') {
+                    navigateImage(1);
+                } else if (e.key === 'ArrowLeft') {
+                    navigateImage(-1);
+                } else if (e.key === 'Escape') {
+                    closeImageViewer();
+                }
+            }
+        });
+    }
+
+    // 초기화 함수 실행 시점
+    document.addEventListener('DOMContentLoaded', () => {
+        // 페이지 로드 시 'all' 탭으로 시작
+        renderResults(seedResults);
+        initializeMap();
+        setupImageViewerEvents(); // 뷰어 이벤트 설정 추가
+    });
+    
+    window.addEventListener('load', initializeMap);
+    
+    window.addEventListener('beforeunload', () => {
+        if (mapContainerObserver) {
+            mapContainerObserver.disconnect();
+        }
+    });
 
 </script>
 
