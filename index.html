@@ -234,8 +234,17 @@
         { title: "로컬 베이커리 위크 in 하단 · 참가 매장 안내", url: "https://bakeryweek.kr/hadan", displayUrl: "bakeryweek.kr", snippet: "하단의 개성 있는 로컬 베이커리 20여 곳이 참여합니다. 시그니처 메뉴, 빵 굽는 시간, 스탬프 위치와 한정 굿즈 정보를 제공합니다.", rating: 4.6, reviews: 745 },
     ];
     
-    // 이미지 검색 결과 데이터 (비워짐) 👈 이미지 탭 결과를 없애는 조치
-    const imageResults = []; 
+    // 이미지 검색 결과 데이터 (요청하신 8개의 이미지로 재정의) 👈 수정된 부분
+    const imageResults = [
+        { url: "images/0ddwdw.jpg", caption: "새로운 이미지 1", source: "Local" },
+        { url: "images/1000113668.jpg", caption: "새로운 이미지 2", source: "Local" },
+        { url: "images/dddd.jpg", caption: "새로운 이미지 3", source: "Local" },
+        { url: "images/dddddd.jpg", caption: "새로운 이미지 4", source: "Local" },
+        { url: "images/ddddddd.jpg", caption: "새로운 이미지 5", source: "Local" },
+        { url: "images/ddddddddwdwd.jpg", caption: "새로운 이미지 6", source: "Local" },
+        { url: "images/dwdwda.jpg", caption: "새로운 이미지 7", source: "Local" },
+        { url: "images/Gemini_Generated_Image_px7fb9px7fb9px7f.png", caption: "기본 이미지 8", source: "Local" }, // 기존에 있던 예시 이미지 하나 추가
+    ];
     
     // 동영상 검색 결과 데이터
     const videoResults = [
@@ -448,7 +457,7 @@
             // '이미지' 탭: 상단 요약/지도 숨김, 이미지 갤러리 표시 (사이드바 숨김)
             resultsSection.classList.remove('lg:col-span-1');
             resultsSection.classList.add('col-span-full');
-            renderImageGallery(imageResults); // imageResults는 비어 있음
+            renderImageGallery(imageResults); // 이제 이미지가 표시됨
 
         } else if (tabName === 'video') {
             // '동영상' 탭: 상단 요약/지도 숨김, 동영상 결과 표시 (사이드바 숨김)
