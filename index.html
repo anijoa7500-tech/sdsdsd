@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>썸타임뷰티</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f7f1e8;color:#18130f;font-family:Pretendard,"Noto Sans KR",sans-serif}
@@ -26,6 +27,23 @@ header{
 .menu button:hover{background:rgba(255,255,255,.16)}
 .reserve{background:var(--gold)!important;color:#18130f!important}
 .hamburger{display:none;background:none;color:white;font-size:30px}
+
+.mobile-logo{display:none}
+
+.menu-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.38);
+  opacity:0;
+  visibility:hidden;
+  transition:.3s;
+  z-index:90;
+}
+
+.menu-overlay.active{
+  opacity:1;
+  visibility:visible;
+}
 
 .page{display:none}
 .page.active{display:block}
@@ -97,26 +115,73 @@ footer{background:#14100e;color:rgba(255,255,255,.72);text-align:center;padding:
 
 @media(max-width:850px){
   .nav{height:76px}
-  .hamburger{display:block}
+
+  .hamburger{
+    display:block;
+    position:relative;
+    z-index:101;
+  }
+
   .menu{
     position:fixed;
-    top:76px;
-    right:-280px;
-    width:260px;
+    top:0;
+    right:-340px;
+    width:340px;
+    max-width:82vw;
     height:100vh;
     background:#18130f;
     flex-direction:column;
-    padding:28px;
-    transition:.3s;
-    box-shadow:-20px 0 40px rgba(0,0,0,.25);
+    align-items:flex-start;
+    gap:6px;
+    padding:110px 30px 30px;
+    transition:.35s ease;
+    box-shadow:-20px 0 60px rgba(0,0,0,.35);
+    z-index:100;
   }
+
   .menu.active{right:0}
-  .menu button{text-align:left;font-size:16px;padding:14px}
+
+  .menu button{
+    width:100%;
+    text-align:left;
+    font-size:18px;
+    font-weight:800;
+    padding:18px 20px;
+    border-radius:14px;
+  }
+
+  .menu button:hover{background:rgba(255,255,255,.08)}
+
+  .mobile-logo{
+    display:block;
+    width:100%;
+    padding-bottom:24px;
+    margin-bottom:20px;
+    border-bottom:1px solid rgba(255,255,255,.12);
+  }
+
+  .mobile-logo small{
+    display:block;
+    color:#d8b777;
+    letter-spacing:4px;
+    margin-bottom:8px;
+    font-weight:800;
+  }
+
+  .mobile-logo strong{
+    display:block;
+    color:white;
+    font-size:30px;
+    font-family:Georgia,serif;
+    letter-spacing:1px;
+  }
+
   .hero{
     background:
       linear-gradient(rgba(0,0,0,.62),rgba(0,0,0,.6)),
       url("https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&auto=format&fit=crop") center/cover;
   }
+
   h1{font-size:56px;letter-spacing:-3px}
   .hero p{font-size:17px}
   .quick,.price-grid,.gallery,.contact-grid{grid-template-columns:1fr}
@@ -128,11 +193,18 @@ footer{background:#14100e;color:rgba(255,255,255,.72);text-align:center;padding:
 
 <body>
 
+<div class="menu-overlay" onclick="toggleMenu()"></div>
+
 <header>
   <div class="nav">
     <button class="logo" onclick="showPage('home')">썸타임<span>뷰티</span></button>
 
     <div class="menu" id="menu">
+      <div class="mobile-logo">
+        <small>SOME TIME</small>
+        <strong>BEAUTY</strong>
+      </div>
+
       <button onclick="showPage('home')">메인</button>
       <button onclick="showPage('price')">관리가격</button>
       <button onclick="showPage('gallery')">샵사진</button>
@@ -269,11 +341,14 @@ function showPage(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   window.scrollTo({top:0,behavior:"smooth"});
+
   document.getElementById("menu").classList.remove("active");
+  document.querySelector(".menu-overlay").classList.remove("active");
 }
 
 function toggleMenu(){
   document.getElementById("menu").classList.toggle("active");
+  document.querySelector(".menu-overlay").classList.toggle("active");
 }
 
 function openLightbox(src){
