@@ -27,7 +27,6 @@ header{
 .menu button:hover{background:rgba(255,255,255,.16)}
 .reserve{background:var(--gold)!important;color:#18130f!important}
 .hamburger{display:none;background:none;color:white;font-size:30px}
-
 .mobile-logo{display:none}
 
 .menu-overlay{
@@ -39,11 +38,7 @@ header{
   transition:.3s;
   z-index:90;
 }
-
-.menu-overlay.active{
-  opacity:1;
-  visibility:visible;
-}
+.menu-overlay.active{opacity:1;visibility:visible}
 
 .page{display:none}
 .page.active{display:block}
@@ -68,8 +63,24 @@ p{color:#6c6258;line-height:1.8;font-size:17px}
 .btn.light{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.42)}
 
 section{padding:95px 0}
-.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:-55px;position:relative;z-index:5}
-.card{background:white;border:1px solid #e5d8c8;border-radius:24px;padding:26px;text-align:center;box-shadow:0 18px 45px rgba(0,0,0,.08)}
+
+/* 예전 스타일 서비스 카드 */
+.quick{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-top:-55px;
+  position:relative;
+  z-index:5;
+}
+.card{
+  background:white;
+  border:1px solid #e5d8c8;
+  border-radius:24px;
+  padding:26px;
+  text-align:center;
+  box-shadow:0 18px 45px rgba(0,0,0,.08);
+}
 .card h3{margin:10px 0 8px;font-size:22px}
 .card p{margin:0;color:#6c6258;font-size:14px}
 .icon{font-size:34px}
@@ -87,16 +98,117 @@ section{padding:95px 0}
 .gallery img{height:330px;border-radius:24px;box-shadow:0 14px 35px rgba(0,0,0,.08);cursor:pointer;transition:.25s}
 .gallery img:hover{transform:scale(1.025)}
 
-.contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px}
-.contact-card{background:#18130f;color:white;border-radius:30px;padding:36px}
-.contact-card p{color:rgba(255,255,255,.75)}
-.contact-link{display:block;background:rgba(255,255,255,.09);padding:17px;border-radius:18px;margin-top:12px;color:white;font-weight:800}
-.map{
-  min-height:430px;border-radius:30px;
-  display:grid;place-items:center;text-align:center;
-  background:#fffaf3;border:1px solid #e2d5c3;padding:30px;
+/* 예약문의는 수정된 고급 버전 유지 */
+.contact-section{
+  background:
+    radial-gradient(circle at 15% 15%,rgba(216,183,119,.18),transparent 30%),
+    linear-gradient(180deg,#f7f1e8 0%,#fffaf3 100%);
 }
-.map .btn{margin-top:20px;display:inline-flex}
+.contact-grid{
+  display:grid;
+  grid-template-columns:.9fr 1.1fr;
+  gap:26px;
+  align-items:stretch;
+}
+.contact-card{
+  background:linear-gradient(145deg,#1b1511,#2b211b);
+  color:white;
+  border-radius:34px;
+  padding:42px;
+  box-shadow:0 24px 60px rgba(0,0,0,.14);
+}
+.contact-card h2{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:42px;
+  margin-bottom:22px;
+  letter-spacing:-1px;
+}
+.contact-card p{
+  color:rgba(255,255,255,.74);
+  margin-bottom:30px;
+}
+.contact-link{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(216,183,119,.28);
+  padding:17px 18px;
+  border-radius:18px;
+  margin-top:12px;
+  color:white;
+  font-weight:800;
+  transition:.22s;
+}
+.contact-link:hover{
+  background:rgba(216,183,119,.14);
+  transform:translateX(4px);
+}
+.contact-link::after{
+  content:"→";
+  color:#d8b777;
+}
+.contact-sub{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:22px;
+}
+.contact-sub div{
+  border-top:1px solid rgba(255,255,255,.12);
+  padding-top:16px;
+}
+.contact-sub small{
+  display:block;
+  color:#d8b777;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+.contact-sub b{
+  font-size:15px;
+  color:white;
+}
+
+.map{
+  min-height:520px;
+  border-radius:34px;
+  overflow:hidden;
+  position:relative;
+  display:flex;
+  align-items:center;
+  padding:48px;
+  background:
+    linear-gradient(90deg,rgba(255,250,243,.97),rgba(255,250,243,.72)),
+    url("https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1200&auto=format&fit=crop") center/cover;
+  border:1px solid #e2d5c3;
+  box-shadow:0 24px 60px rgba(0,0,0,.08);
+}
+.map h2{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:48px;
+  margin-bottom:18px;
+}
+.map p{max-width:420px}
+.map-pin{
+  position:absolute;
+  right:72px;
+  top:50%;
+  transform:translateY(-50%);
+  width:74px;
+  height:74px;
+  border-radius:50%;
+  background:#18130f;
+  color:white;
+  display:grid;
+  place-items:center;
+  font-size:30px;
+  box-shadow:0 18px 40px rgba(0,0,0,.22);
+}
+.map .btn{
+  margin-top:22px;
+  display:inline-flex;
+}
 
 .lightbox{
   position:fixed;inset:0;background:rgba(0,0,0,.9);
@@ -150,8 +262,6 @@ footer{background:#14100e;color:rgba(255,255,255,.72);text-align:center;padding:
     border-radius:14px;
   }
 
-  .menu button:hover{background:rgba(255,255,255,.08)}
-
   .mobile-logo{
     display:block;
     width:100%;
@@ -173,7 +283,6 @@ footer{background:#14100e;color:rgba(255,255,255,.72);text-align:center;padding:
     color:white;
     font-size:30px;
     font-family:Georgia,serif;
-    letter-spacing:1px;
   }
 
   .hero{
@@ -184,9 +293,28 @@ footer{background:#14100e;color:rgba(255,255,255,.72);text-align:center;padding:
 
   h1{font-size:56px;letter-spacing:-3px}
   .hero p{font-size:17px}
-  .quick,.price-grid,.gallery,.contact-grid{grid-template-columns:1fr}
+
+  .quick,.price-grid,.gallery,.contact-grid{
+    grid-template-columns:1fr;
+  }
   .quick{margin-top:25px}
   .gallery img{height:360px}
+
+  .contact-card{padding:32px 26px}
+  .contact-sub{grid-template-columns:1fr}
+  .map{
+    min-height:430px;
+    padding:32px 26px;
+  }
+  .map h2{font-size:40px}
+  .map-pin{
+    right:28px;
+    top:36px;
+    transform:none;
+    width:56px;
+    height:56px;
+    font-size:24px;
+  }
 }
 </style>
 </head>
@@ -232,10 +360,26 @@ footer{background:#14100e;color:rgba(255,255,255,.72);text-align:center;padding:
   </section>
 
   <div class="container quick">
-    <div class="card"><div class="icon">💧</div><h3>피부관리</h3><p>수분 · 모공 · 진정 · 광채</p></div>
-    <div class="card"><div class="icon">🌿</div><h3>체형관리</h3><p>전신순환 · 부분순환 · 슬리밍</p></div>
-    <div class="card"><div class="icon">✨</div><h3>눈썹·입술</h3><p>자연눈썹 · 콤보눈썹</p></div>
-    <div class="card"><div class="icon">🖤</div><h3>SMP</h3><p>두피 · 헤어라인 디자인</p></div>
+    <div class="card" onclick="showPage('price')">
+      <div class="icon">💧</div>
+      <h3>피부관리</h3>
+      <p>수분 · 모공 · 진정 · 광채</p>
+    </div>
+    <div class="card" onclick="showPage('price')">
+      <div class="icon">🌿</div>
+      <h3>체형관리</h3>
+      <p>전신순환 · 부분순환 · 슬리밍</p>
+    </div>
+    <div class="card" onclick="showPage('price')">
+      <div class="icon">✨</div>
+      <h3>눈썹·입술</h3>
+      <p>자연눈썹 · 콤보눈썹</p>
+    </div>
+    <div class="card" onclick="showPage('price')">
+      <div class="icon">🖤</div>
+      <h3>SMP</h3>
+      <p>두피 · 헤어라인 디자인</p>
+    </div>
   </div>
 </main>
 
@@ -294,7 +438,7 @@ footer{background:#14100e;color:rgba(255,255,255,.72);text-align:center;padding:
 </main>
 
 <main id="contact" class="page">
-  <section>
+  <section class="contact-section">
     <div class="container">
       <div class="section-title">
         <div class="label">RESERVATION</div>
@@ -304,25 +448,40 @@ footer{background:#14100e;color:rgba(255,255,255,.72);text-align:center;padding:
 
       <div class="contact-grid">
         <div class="contact-card">
-          <h2>썸타임뷰티</h2>
+          <h2>Some Time Beauty</h2>
           <p>
             울산광역시 중구 우정로56 3층<br>
             태화동 주민센터 맞은편 도보 1분
           </p>
+
           <a class="contact-link" href="#">카카오톡 예약 연결</a>
           <a class="contact-link" href="#">네이버 예약 연결</a>
           <a class="contact-link" href="#">인스타그램 연결</a>
-          <div class="contact-link">전화번호 입력 예정</div>
+
+          <div class="contact-sub">
+            <div>
+              <small>PHONE</small>
+              <b>전화번호 입력 예정</b>
+            </div>
+            <div>
+              <small>RESERVATION</small>
+              <b>1:1 예약제 운영</b>
+            </div>
+          </div>
         </div>
 
         <div class="map">
           <div>
             <h2>오시는 길</h2>
-            <p>울산광역시 중구 우정로56 3층</p>
+            <p>
+              울산광역시 중구 우정로56 3층<br>
+              태화동 주민센터 맞은편 도보 1분
+            </p>
             <a class="btn" href="https://map.naver.com/p/search/울산광역시%20중구%20우정로56%203층" target="_blank">
               네이버 지도 열기
             </a>
           </div>
+          <div class="map-pin">⌖</div>
         </div>
       </div>
     </div>
